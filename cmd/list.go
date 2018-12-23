@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"github.com/morimolymoly/like-crawler/config"
 	"github.com/spf13/cobra"
 )
 
@@ -14,7 +13,5 @@ var listCmd = &cobra.Command{
 	Short: "Show liked list",
 	Long:  `Show liked list`,
 	Run: func(cmd *cobra.Command, args []string) {
-		c := config.GetInstance()
-
 	},
 }

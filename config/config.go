@@ -13,10 +13,10 @@ var singleton *Config
 
 // Config ... config object
 type Config struct {
-	consumerKey    string `yaml:"consumerKey"`
-	consumerSecret string `yaml:"consumerSecret"`
-	accessToken    string `yaml:"accessToken"`
-	accessSecret   string `yaml:"accessSecret"`
+	ConsumerKey    string `yaml:"consumerKey"`
+	ConsumerSecret string `yaml:"consumerSecret"`
+	AccessToken    string `yaml:"accessToken"`
+	AccessSecret   string `yaml:"accessSecret"`
 }
 
 // GetInstance ... Get config object
@@ -26,10 +26,10 @@ func GetInstance() *Config {
 
 // SetConfigs ... set configs
 func (c *Config) SetConfigs(consumerKey string, consumerSecret string, accessToken string, accessSecret string) error {
-	c.consumerKey = consumerKey
-	c.consumerSecret = consumerSecret
-	c.accessToken = accessToken
-	c.accessSecret = accessSecret
+	c.ConsumerKey = consumerKey
+	c.ConsumerSecret = consumerSecret
+	c.AccessToken = accessToken
+	c.AccessSecret = accessSecret
 
 	viper.Set(cKEY, consumerKey)
 	viper.Set(aTOKEN, accessToken)
@@ -49,16 +49,16 @@ func (c *Config) ReadConfig() error {
 	if err != nil {
 		return err
 	}
-	c.consumerKey = viper.GetString(cKEY)
-	c.accessToken = viper.GetString(aTOKEN)
-	c.consumerSecret = viper.GetString(cSECRET)
-	c.accessSecret = viper.GetString(aSECRET)
+	c.ConsumerKey = viper.GetString(cKEY)
+	c.AccessToken = viper.GetString(aTOKEN)
+	c.ConsumerSecret = viper.GetString(cSECRET)
+	c.AccessSecret = viper.GetString(aSECRET)
 	return nil
 }
 
 // CheckConfig ... check config
 func CheckConfig() error {
-	if singleton.consumerKey != "" && singleton.accessToken != "" {
+	if singleton.ConsumerKey != "" && singleton.AccessToken != "" {
 		return nil
 	}
 	return fmt.Errorf("You must need to set consumer key and access token by set-subcommand")
