@@ -13,10 +13,12 @@ var singleton *Config
 
 // Config ... config object
 type Config struct {
-	consumerKey    string `yaml:"consumerKey"`
-	consumerSecret string `yaml:"consumerSecret"`
-	accessToken    string `yaml:"accessToken"`
-	accessSecret   string `yaml:"accessSecret"`
+	ConsumerKey    string `yaml:"consumerKey"`
+	ConsumerSecret string `yaml:"consumerSecret"`
+	AccessToken    string `yaml:"accessToken"`
+	AccessSecret   string `yaml:"accessSecret"`
+	SinceID        int64  `yaml:"sinceID"`
+	SavePath       string `yaml:"savePath"`
 }
 
 // GetInstance ... Get config object
@@ -24,17 +26,42 @@ func GetInstance() *Config {
 	return singleton
 }
 
-// SetConfigs ... set configs
-func (c *Config) SetConfigs(consumerKey string, consumerSecret string, accessToken string, accessSecret string) error {
-	c.consumerKey = consumerKey
-	c.consumerSecret = consumerSecret
-	c.accessToken = accessToken
-	c.accessSecret = accessSecret
+// UpdateSavePath ... update savepath
+func (c *Config) UpdateSavePath(savePath string) error {
+	c.ReadConfig()
+	c.SavePath = savePath
+	viper.Set(sPATH, savePath)
+	err := viper.WriteConfig()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateSinceID ... update sinceID
+func (c *Config) UpdateSinceID(sinceID int64) error {
+	c.ReadConfig()
+	c.SinceID = sinceID
+	viper.Set(sID, sinceID)
+	err := viper.WriteConfig()
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+// UpdateCreds ... Update creds
+func (c *Config) UpdateCreds(consumerKey string, consumerSecret string, accessToken string, accessSecret string) error {
+	c.ReadConfig()
+	c.ConsumerKey = consumerKey
+	c.ConsumerSecret = consumerSecret
+	c.AccessToken = accessToken
+	c.AccessSecret = accessSecret
 
 	viper.Set(cKEY, consumerKey)
 	viper.Set(aTOKEN, accessToken)
-	viper.Set(cSECRET, consumerKey)
-	viper.Set(aSECRET, accessToken)
+	viper.Set(cSECRET, consumerSecret)
+	viper.Set(aSECRET, accessSecret)
 
 	err := viper.WriteConfig()
 	if err != nil {
@@ -49,19 +76,24 @@ func (c *Config) ReadConfig() error {
 	if err != nil {
 		return err
 	}
-	c.consumerKey = viper.GetString(cKEY)
-	c.accessToken = viper.GetString(aTOKEN)
-	c.consumerSecret = viper.GetString(cSECRET)
-	c.accessSecret = viper.GetString(aSECRET)
+	c.ConsumerKey = viper.GetString(cKEY)
+	c.AccessToken = viper.GetString(aTOKEN)
+	c.ConsumerSecret = viper.GetString(cSECRET)
+	c.AccessSecret = viper.GetString(aSECRET)
+	c.SavePath = viper.GetString(sPATH)
+	c.SinceID = viper.GetInt64(sID)
 	return nil
 }
 
 // CheckConfig ... check config
 func CheckConfig() error {
-	if singleton.consumerKey != "" && singleton.accessToken != "" {
-		return nil
+	if singleton.ConsumerKey == "" && singleton.AccessToken == "" {
+		return fmt.Errorf("You must need to set consumer key and access token by setcreds subcommand")
 	}
-	return fmt.Errorf("You must need to set consumer key and access token by set-subcommand")
+	if singleton.SavePath == "" {
+		return fmt.Errorf("You must need to set savePath by setsavepath subcommand")
+	}
+	return nil
 }
 
 func getConfigfilePath() (string, error) {
@@ -89,6 +121,7 @@ func Init() error {
 	}
 
 	viper.SetConfigFile(dp)
+	viper.SetDefault(sID, 0)
 	viper.SetConfigType(dTYPE)
 
 	_, err = os.Stat(dp)
