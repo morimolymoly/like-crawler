@@ -10,11 +10,11 @@ import (
 )
 
 func init() {
-	rootCmd.AddCommand(setCmd)
+	rootCmd.AddCommand(credsCmd)
 }
 
-var setCmd = &cobra.Command{
-	Use:   "set consumerkey and accessToken",
+var credsCmd = &cobra.Command{
+	Use:   "setcreds",
 	Short: "Set consumerkey and accessToken",
 	Long:  `Set consumerkey and accessToken`,
 	Run: func(cmd *cobra.Command, args []string) {
@@ -24,11 +24,19 @@ var setCmd = &cobra.Command{
 		stdin.Scan()
 		ck := stdin.Text()
 
+		fmt.Printf("ConsumerSecret:")
+		stdin.Scan()
+		cs := stdin.Text()
+
 		fmt.Printf("AccessToken:")
 		stdin.Scan()
 		at := stdin.Text()
 
-		err := c.SetConfigs(ck, at)
+		fmt.Printf("AccessSecret:")
+		stdin.Scan()
+		as := stdin.Text()
+
+		err := c.UpdateCreds(ck, cs, at, as)
 		if err != nil {
 			fmt.Println(err)
 			os.Exit(1)

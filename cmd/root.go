@@ -14,6 +14,8 @@ var rootCmd = &cobra.Command{
 	Long:  `Crawler for Twitter's Liked awesome pictures`,
 	Run: func(cmd *cobra.Command, args []string) {
 		// check config states
+		c := config.GetInstance()
+		c.ReadConfig()
 		err := config.CheckConfig()
 		if err != nil {
 			fmt.Println(err)
