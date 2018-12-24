@@ -5,7 +5,6 @@ import (
 	"os"
 
 	"github.com/morimolymoly/like-crawler/client"
-	"github.com/morimolymoly/like-crawler/config"
 	"github.com/morimolymoly/like-crawler/downloader"
 	"github.com/spf13/cobra"
 )
@@ -24,7 +23,6 @@ var dlpCmd = &cobra.Command{
 			return
 		}
 
-		cf := config.GetInstance()
 		err := client.Init()
 		if err != nil {
 			fmt.Println(err)
