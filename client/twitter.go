@@ -54,6 +54,9 @@ func (t *Twitter) getPictureURLs(screenName string, maxID int64, sinceID int64) 
 			}
 		}
 	}
+	if len(likes) == 0 {
+		return urls, 0, 0, nil
+	}
 	return urls, likes[len(likes)-1].ID, likes[0].ID, nil
 }
 

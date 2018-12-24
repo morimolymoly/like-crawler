@@ -23,6 +23,7 @@ type Config struct {
 
 // GetInstance ... Get config object
 func GetInstance() *Config {
+	singleton.ReadConfig()
 	return singleton
 }
 
@@ -40,6 +41,9 @@ func (c *Config) UpdateSavePath(savePath string) error {
 
 // UpdateSinceID ... update sinceID
 func (c *Config) UpdateSinceID(sinceID int64) error {
+	if sinceID == 0 {
+		return nil
+	}
 	c.ReadConfig()
 	c.SinceID = sinceID
 	viper.Set(sID, sinceID)

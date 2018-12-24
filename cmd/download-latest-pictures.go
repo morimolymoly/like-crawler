@@ -25,7 +25,6 @@ var dlpCmd = &cobra.Command{
 		}
 
 		cf := config.GetInstance()
-		cf.ReadConfig()
 		err := client.Init()
 		if err != nil {
 			fmt.Println(err)
