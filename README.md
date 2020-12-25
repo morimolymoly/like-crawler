@@ -2,7 +2,7 @@
 
 ## Build
 ```sh
-dep ensure && go build
+go build
 ```
 
 ## Usage
